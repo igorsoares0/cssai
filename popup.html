@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CSS Scan Tool</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CSS Scan Tool</h1>
+            <div class="status" id="status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Carregando...</span>
+            </div>
+        </div>
+        
+        <div class="main-controls">
+            <button id="toggleBtn" class="toggle-btn">
+                <span id="toggleText">Ativar Scanner</span>
+            </button>
+            
+            <div class="instructions" id="instructions">
+                <h3>Como usar:</h3>
+                <ol>
+                    <li>Clique em "Ativar Scanner"</li>
+                    <li>Passe o mouse sobre elementos da página</li>
+                    <li>Clique no elemento para ver o CSS</li>
+                    <li>Pressione ESC para sair</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>Recursos:</h3>
+            <ul>
+                <li>✨ Hover para destacar elementos</li>
+                <li>📋 Copiar CSS otimizado</li>
+                <li>🎯 Copiar seletores CSS</li>
+                <li>⚡ Interface flutuante</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>v1.0 - CSS Inspector Tool</p>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

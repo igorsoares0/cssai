@@ -1,0 +1,350 @@
+/* CSS Scan Tool - Content Styles */
+
+/* Highlight overlay for hovered elements */
+.css-scan-highlight {
+    position: absolute !important;
+    pointer-events: none !important;
+    z-index: 1000 !important;
+    border: 2px solid #007bff !important;
+    background: rgba(0, 123, 255, 0.1) !important;
+    border-radius: 3px !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.1s ease !important;
+}
+
+/* Keep highlight visible even when modal is open - just lower z-index */
+body:has(.css-scan-backdrop) .css-scan-highlight {
+    z-index: 999 !important;
+}
+
+/* Fallback for browsers that don't support :has() - keep highlight visible */
+.css-scan-modal-open .css-scan-highlight {
+    z-index: 999 !important;
+}
+
+
+/* CSS Panel - Modal Overlay */
+.css-scan-panel {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 450px !important;
+    max-width: 90vw !important;
+    max-height: 80vh !important;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4) !important;
+    z-index: 2147483646 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-size: 14px !important;
+    overflow: hidden !important;
+    animation: cssModalFadeIn 0.3s ease !important;
+}
+
+/* Modal backdrop */
+.css-scan-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 2147483645 !important;
+    animation: cssBackdropFadeIn 0.3s ease !important;
+}
+
+/* Animations */
+@keyframes cssModalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes cssBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Panel header */
+.css-scan-header {
+    background: #f8f9fa !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e9ecef !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.css-scan-header-controls {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+.css-scan-drag-handle {
+    color: #6c757d !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    cursor: move !important;
+    user-select: none !important;
+    padding: 2px 4px !important;
+    margin-right: 8px !important;
+}
+
+.css-scan-drag-handle:hover {
+    color: #007bff !important;
+}
+
+.css-scan-toggle-edit {
+    background: none !important;
+    border: none !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    padding: 4px !important;
+    border-radius: 3px !important;
+    transition: all 0.2s ease !important;
+}
+
+.css-scan-toggle-edit:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.css-scan-minimize {
+    background: none !important;
+    border: none !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+    padding: 4px 6px !important;
+    border-radius: 3px !important;
+    line-height: 1 !important;
+    font-weight: bold !important;
+    color: #6c757d !important;
+}
+
+.css-scan-minimize:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+    color: #007bff !important;
+}
+
+.css-scan-title {
+    font-weight: 600 !important;
+    color: #212529 !important;
+    margin: 0 !important;
+}
+
+.css-scan-close {
+    background: none !important;
+    border: none !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+    color: #6c757d !important;
+    padding: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.css-scan-close:hover {
+    color: #000 !important;
+}
+
+/* Element info */
+.css-scan-element-info {
+    padding: 8px 16px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Mode tabs */
+.css-scan-mode-tabs {
+    display: flex !important;
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.css-scan-tab {
+    flex: 1 !important;
+    padding: 8px 10px !important;
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    color: #6c757d !important;
+    transition: all 0.2s !important;
+    border-bottom: 2px solid transparent !important;
+}
+
+.css-scan-tab:hover {
+    background: rgba(0, 123, 255, 0.1) !important;
+    color: #007bff !important;
+}
+
+.css-scan-tab.active {
+    color: #007bff !important;
+    border-bottom-color: #007bff !important;
+    background: #fff !important;
+}
+
+/* Content area */
+.css-scan-content {
+    position: relative !important;
+}
+
+.css-scan-tag {
+    background: #007bff !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-size: 12px !important;
+    font-family: monospace !important;
+    margin-right: 8px !important;
+}
+
+.css-scan-class {
+    color: #28a745 !important;
+    font-family: monospace !important;
+    font-size: 12px !important;
+}
+
+/* CSS code area */
+.css-scan-code {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    background: #f8f9fa !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    color: #212529 !important;
+    white-space: pre-wrap !important;
+}
+
+/* CSS Editor */
+.css-scan-editor {
+    background: #fff !important;
+    padding: 16px !important;
+}
+
+.css-scan-textarea {
+    width: 100% !important;
+    min-height: 200px !important;
+    max-height: 300px !important;
+    padding: 12px !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    color: #212529 !important;
+    background: #f8f9fa !important;
+    resize: vertical !important;
+    box-sizing: border-box !important;
+}
+
+.css-scan-textarea:focus {
+    outline: none !important;
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25) !important;
+}
+
+.css-scan-editor-controls {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 12px !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+}
+
+.css-scan-btn-small {
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+}
+
+/* Actions */
+.css-scan-actions {
+    padding: 10px 12px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-top: 1px solid #e9ecef !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.css-scan-actions-row {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: stretch !important;
+}
+
+.css-scan-actions-row .css-scan-btn {
+    flex: 1 !important;
+}
+
+.css-scan-btn {
+    background: #007bff !important;
+    color: white !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+}
+
+.css-scan-btn:hover {
+    background: #0056b3 !important;
+}
+
+.css-scan-btn-secondary {
+    background: #6c757d !important;
+}
+
+.css-scan-btn-secondary:hover {
+    background: #545b62 !important;
+}
+
+.css-scan-btn-export {
+    background: #28a745 !important;
+    font-size: 11px !important;
+    padding: 8px 12px !important;
+}
+
+.css-scan-btn-export:hover {
+    background: #218838 !important;
+}
+
+/* Loading state */
+.css-scan-loading {
+    padding: 20px !important;
+    text-align: center !important;
+    color: #6c757d !important;
+}
+
+/* Hide when CSS Scan is disabled */
+body.css-scan-disabled .css-scan-highlight,
+body.css-scan-disabled .css-scan-panel {
+    display: none !important;
+}
+
+/* Cursor indication when scanning is active */
+body:not(.css-scan-disabled) * {
+    cursor: crosshair !important;
+}
+
+/* Except for CSS Scan elements */
+body:not(.css-scan-disabled) .css-scan-panel,
+body:not(.css-scan-disabled) .css-scan-panel *,
+body:not(.css-scan-disabled) .css-scan-highlight {
+    cursor: default !important;
+}

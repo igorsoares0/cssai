@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "CSS Scan Tool",
+  "version": "1.0",
+  "description": "Ferramenta completa para inspecionar e copiar CSS de qualquer elemento",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CSS Scan Tool"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
