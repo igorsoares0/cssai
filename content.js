@@ -349,22 +349,14 @@ class CSSScanner {
         this.hidePanel();
 
         try {
-            // Create backdrop
-            this.backdrop = document.createElement('div');
-            this.backdrop.className = 'css-scan-backdrop';
-            this.backdrop.addEventListener('click', () => {
-                this.hidePanel();
-            });
-            
-            // Create panel
+            // Create panel directly without backdrop
             this.panel = this.createPanel(element);
             
-            // Add both to DOM
-            document.body.appendChild(this.backdrop);
+            // Add panel to DOM without backdrop
             document.body.appendChild(this.panel);
             
-            // Don't hide highlight - let CSS handle it with :has() selector
-            // The highlight will remain visible under the modal
+            // Position panel in a corner to avoid covering content
+            this.positionPanel();
             
             // Focus management
             this.panel.focus();
@@ -375,9 +367,23 @@ class CSSScanner {
         }
     }
 
-    // Modal positioning is handled by CSS - no JavaScript needed
-
-    // Modal doesn't need drag functionality - centered by CSS
+    positionPanel() {
+        if (!this.panel) return;
+        
+        try {
+            // Position panel in top-right corner to avoid covering content
+            this.panel.style.position = 'fixed';
+            this.panel.style.top = '20px';
+            this.panel.style.right = '20px';
+            this.panel.style.left = 'auto';
+            this.panel.style.transform = 'none';
+            this.panel.style.maxHeight = 'calc(100vh - 40px)';
+            this.panel.style.overflow = 'auto';
+            
+        } catch (error) {
+            console.warn('Error positioning panel:', error);
+        }
+    }
 
     hidePanel() {
         // Clean up live preview when closing panel
@@ -394,7 +400,7 @@ class CSSScanner {
             this.panel = null;
         }
         
-        // Remove backdrop
+        // Remove backdrop (if exists)
         if (this.backdrop) {
             document.body.removeChild(this.backdrop);
             this.backdrop = null;
@@ -1427,17 +1433,13 @@ ${cssCode}`;
             // Remove existing panel if any
             this.hidePanel();
 
-            // Create panel for multiple elements
-            this.backdrop = document.createElement('div');
-            this.backdrop.className = 'css-scan-backdrop';
-            this.backdrop.addEventListener('click', () => {
-                this.hidePanel();
-            });
-            
+            // Create panel for multiple elements without backdrop
             this.panel = this.createMultiElementPanel();
             
-            document.body.appendChild(this.backdrop);
             document.body.appendChild(this.panel);
+            
+            // Position panel in corner
+            this.positionPanel();
             
             // Extract and show combined CSS
             this.extractMultiElementCSS();

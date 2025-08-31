@@ -12,35 +12,29 @@
     transition: all 0.1s ease !important;
 }
 
-/* Keep highlight visible even when modal is open - just lower z-index */
-body:has(.css-scan-backdrop) .css-scan-highlight {
-    z-index: 999 !important;
-}
-
-/* Fallback for browsers that don't support :has() - keep highlight visible */
-.css-scan-modal-open .css-scan-highlight {
-    z-index: 999 !important;
+/* Keep highlight visible - no backdrop interference */
+.css-scan-highlight {
+    /* No special rules needed - highlight stays visible */
 }
 
 
-/* CSS Panel - Modal Overlay */
+/* CSS Panel - Corner positioned */
 .css-scan-panel {
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    top: 20px !important;
+    right: 20px !important;
     width: 450px !important;
-    max-width: 90vw !important;
-    max-height: 80vh !important;
+    max-width: calc(100vw - 40px) !important;
+    max-height: calc(100vh - 40px) !important;
     background: #fff !important;
-    border: none !important;
-    border-radius: 16px !important;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     z-index: 2147483646 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     font-size: 14px !important;
     overflow: hidden !important;
-    animation: cssModalFadeIn 0.3s ease !important;
+    animation: cssPanelSlideIn 0.2s ease !important;
 }
 
 /* Modal backdrop */
@@ -56,14 +50,14 @@ body:has(.css-scan-backdrop) .css-scan-highlight {
 }
 
 /* Animations */
-@keyframes cssModalFadeIn {
+@keyframes cssPanelSlideIn {
     from {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
+        transform: translateX(20px);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateX(0);
     }
 }
 
