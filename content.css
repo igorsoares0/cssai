@@ -337,12 +337,12 @@ body.css-scan-disabled .css-scan-panel {
     display: none !important;
 }
 
-/* Cursor indication when scanning is active */
+/* Remove crosshair cursor - use normal cursors */
 body:not(.css-scan-disabled) * {
-    cursor: crosshair !important;
+    /* cursor: crosshair !important; - Removed to keep normal cursors */
 }
 
-/* Except for CSS Scan elements */
+/* CSS Scan elements use default cursor */
 body:not(.css-scan-disabled) .css-scan-panel,
 body:not(.css-scan-disabled) .css-scan-panel *,
 body:not(.css-scan-disabled) .css-scan-highlight {
