@@ -8,6 +8,9 @@ class CSSScanner {
         this.lastHoveredElement = null;
         this.selectedElements = new Set(); // Track multiple selected elements
         this.multiSelectMode = false;
+        this.isDragging = false;
+        this.dragOffset = { x: 0, y: 0 };
+        this.panelPosition = null; // Store last panel position
         
         this.init();
     }
@@ -371,17 +374,88 @@ class CSSScanner {
         if (!this.panel) return;
         
         try {
-            // Position panel in top-right corner to avoid covering content
             this.panel.style.position = 'fixed';
-            this.panel.style.top = '20px';
-            this.panel.style.right = '20px';
-            this.panel.style.left = 'auto';
-            this.panel.style.transform = 'none';
             this.panel.style.maxHeight = 'calc(100vh - 40px)';
             this.panel.style.overflow = 'auto';
             
+            if (this.panelPosition) {
+                // Restore last known position
+                this.panel.style.left = this.panelPosition.left;
+                this.panel.style.top = this.panelPosition.top;
+                this.panel.style.right = 'auto';
+                this.panel.style.bottom = 'auto';
+            } else {
+                // Smart initial positioning based on available space
+                this.smartPosition();
+            }
+            
+            this.panel.style.transform = 'none';
+            
         } catch (error) {
             console.warn('Error positioning panel:', error);
+        }
+    }
+
+    smartPosition() {
+        try {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const panelWidth = 450; // Panel width from CSS
+            const panelHeight = Math.min(600, viewportHeight * 0.8); // Estimated panel height
+            
+            let left, top;
+            
+            // Try different positions based on available space
+            if (viewportWidth - panelWidth > 40) {
+                // Check if right side has space
+                if (viewportWidth > 500) {
+                    left = viewportWidth - panelWidth - 20; // Right side
+                } else {
+                    left = 20; // Left side if screen too narrow
+                }
+            } else {
+                left = Math.max(20, (viewportWidth - panelWidth) / 2); // Center if no space
+            }
+            
+            // Vertical positioning - avoid covering selected element if possible
+            if (this.currentElement) {
+                const elementRect = this.currentElement.getBoundingClientRect();
+                const elementCenter = elementRect.top + elementRect.height / 2;
+                
+                // Try to position panel away from selected element
+                if (elementCenter < viewportHeight / 2) {
+                    // Element in top half, try bottom
+                    top = Math.min(elementRect.bottom + 20, viewportHeight - panelHeight - 20);
+                } else {
+                    // Element in bottom half, try top
+                    top = Math.max(20, elementRect.top - panelHeight - 20);
+                }
+                
+                // Ensure panel stays in viewport
+                top = Math.max(20, Math.min(top, viewportHeight - panelHeight - 20));
+            } else {
+                // Default to top-right
+                top = 20;
+            }
+            
+            this.panel.style.left = left + 'px';
+            this.panel.style.top = top + 'px';
+            this.panel.style.right = 'auto';
+            this.panel.style.bottom = 'auto';
+            
+            // Store position for next time
+            this.panelPosition = {
+                left: left + 'px',
+                top: top + 'px'
+            };
+            
+        } catch (error) {
+            console.warn('Error in smart positioning:', error);
+            // Fallback to top-right
+            this.panel.style.top = '20px';
+            this.panel.style.right = '20px';
+            this.panel.style.left = 'auto';
+            this.panel.style.bottom = 'auto';
         }
     }
 
@@ -462,6 +536,9 @@ class CSSScanner {
         panel.querySelector('.css-scan-close').addEventListener('click', () => {
             this.hidePanel();
         });
+
+        // Make panel draggable by header
+        this.makePanelDraggable(panel);
 
         // Tab switching
         panel.querySelectorAll('.css-scan-tab').forEach(tab => {
@@ -1504,6 +1581,9 @@ ${cssCode}`;
             this.hidePanel();
         });
 
+        // Make multi-element panel draggable too
+        this.makePanelDraggable(panel);
+
         // Tab switching
         panel.querySelectorAll('.css-scan-tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -1741,6 +1821,118 @@ ${cssCode}`;
             
         } catch (error) {
             console.error('Error showing copy feedback:', error);
+        }
+    }
+
+    makePanelDraggable(panel) {
+        try {
+            const header = panel.querySelector('.css-scan-header');
+            const dragHandle = panel.querySelector('.css-scan-drag-handle');
+            const titleArea = panel.querySelector('.css-scan-title');
+            
+            if (!header) return;
+            
+            // Make header draggable areas
+            [header, dragHandle, titleArea].filter(el => el).forEach(element => {
+                element.style.cursor = 'move';
+                
+                element.addEventListener('mousedown', (e) => {
+                    this.startDrag(e, panel);
+                });
+            });
+            
+            // Add drag handle if it doesn't exist
+            if (!dragHandle && titleArea) {
+                titleArea.style.cursor = 'move';
+            }
+            
+        } catch (error) {
+            console.warn('Error making panel draggable:', error);
+        }
+    }
+
+    startDrag(e, panel) {
+        try {
+            // Prevent text selection during drag
+            e.preventDefault();
+            
+            this.isDragging = true;
+            
+            // Calculate offset from mouse to panel top-left
+            const rect = panel.getBoundingClientRect();
+            this.dragOffset = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            
+            // Add global event listeners
+            const mouseMoveHandler = (e) => this.dragPanel(e, panel);
+            const mouseUpHandler = () => this.stopDrag(mouseMoveHandler, mouseUpHandler);
+            
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+            
+            // Add dragging class for visual feedback
+            panel.classList.add('css-scan-dragging');
+            
+        } catch (error) {
+            console.warn('Error starting drag:', error);
+        }
+    }
+
+    dragPanel(e, panel) {
+        if (!this.isDragging) return;
+        
+        try {
+            // Calculate new position
+            let newX = e.clientX - this.dragOffset.x;
+            let newY = e.clientY - this.dragOffset.y;
+            
+            // Keep panel within viewport bounds
+            const panelRect = panel.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Constrain X position
+            newX = Math.max(0, Math.min(newX, viewportWidth - panelRect.width));
+            
+            // Constrain Y position  
+            newY = Math.max(0, Math.min(newY, viewportHeight - panelRect.height));
+            
+            // Apply new position - clear all position properties first
+            panel.style.position = 'fixed';
+            panel.style.left = newX + 'px';
+            panel.style.top = newY + 'px';
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+            panel.style.transform = 'none';
+            
+            // Update stored position
+            this.panelPosition = {
+                left: newX + 'px',
+                top: newY + 'px'
+            };
+            
+        } catch (error) {
+            console.warn('Error dragging panel:', error);
+        }
+    }
+
+    stopDrag(mouseMoveHandler, mouseUpHandler) {
+        try {
+            this.isDragging = false;
+            
+            // Remove global event listeners
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+            
+            // Remove dragging class
+            if (this.panel) {
+                this.panel.classList.remove('css-scan-dragging');
+            }
+            
+        } catch (error) {
+            console.warn('Error stopping drag:', error);
         }
     }
 }

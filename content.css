@@ -21,8 +21,6 @@
 /* CSS Panel - Corner positioned */
 .css-scan-panel {
     position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
     width: 450px !important;
     max-width: calc(100vw - 40px) !important;
     max-height: calc(100vh - 40px) !important;
@@ -74,6 +72,8 @@
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
+    cursor: move !important;
+    user-select: none !important;
 }
 
 .css-scan-header-controls {
@@ -131,6 +131,8 @@
     font-weight: 600 !important;
     color: #212529 !important;
     margin: 0 !important;
+    cursor: move !important;
+    user-select: none !important;
 }
 
 .css-scan-close {
@@ -316,6 +318,18 @@
 
 .css-scan-btn-export:hover {
     background: #218838 !important;
+}
+
+/* Dragging state */
+.css-scan-dragging {
+    opacity: 0.9 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+    transform: scale(1.02) !important;
+    transition: none !important;
+}
+
+.css-scan-dragging * {
+    pointer-events: none !important;
 }
 
 /* Loading state */
